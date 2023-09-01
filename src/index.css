@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  /* src: url('/assets/2/Inter-Bold-c63158babcb7902203ed73476ccf901db34825ea524d4a36a52b5e5f97e1abf7.woff2') format('woff2'); */
+}
+
+section.new_index {
+  background-image: linear-gradient(to right, rgba(var(--tmdbDarkBlue), 0.8) 0%, url("https://upload.wikimedia.org/wikipedia/hi/thumb/4/4b/%E0%A4%9F%E0%A4%BE%E0%A4%87%E0%A4%9F%E0%A5%88%E0%A4%A8%E0%A4%BF%E0%A4%95_%E0%A4%AB%E0%A4%BF%E0%A4%B2%E0%A5%8D%E0%A4%AE_%E0%A4%AA%E0%A5%8B%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%B0.jpeg/330px-%E0%A4%9F%E0%A4%BE%E0%A4%87%E0%A4%9F%E0%A5%88%E0%A4%A8%E0%A4%BF%E0%A4%95_%E0%A4%AB%E0%A4%BF%E0%A4%B2%E0%A5%8D%E0%A4%AE_%E0%A4%AA%E0%A5%8B%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%B0.jpeg") 100%);
+  /* background-image: linear-gradient(to right, rgba(var(--tmdbDarkBlue), 0.8) 0%, rgba(var(--tmdbDarkBlue), 0) 100%), url('https://upload.wikimedia.org/wikipedia/hi/thumb/4/4b/%E0%A4%9F%E0%A4%BE%E0%A4%87%E0%A4%9F%E0%A5%88%E0%A4%A8%E0%A4%BF%E0%A4%95_%E0%A4%AB%E0%A4%BF%E0%A4%B2%E0%A5%8D%E0%A4%AE_%E0%A4%AA%E0%A5%8B%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%B0.jpeg/330px-%E0%A4%9F%E0%A4%BE%E0%A4%87%E0%A4%9F%E0%A5%88%E0%A4%A8%E0%A4%BF%E0%A4%95_%E0%A4%AB%E0%A4%BF%E0%A4%B2%E0%A5%8D%E0%A4%AE_%E0%A4%AA%E0%A5%8B%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%B0.jpeg'); */
+}

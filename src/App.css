@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.header {
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Ghost_in_the_Shell_logo_%281995_film%29.svg/420px-Ghost_in_the_Shell_logo_%281995_film%29.svg.png');
+  background-size: cover;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -32,6 +37,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
