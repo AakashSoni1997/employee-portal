@@ -49,7 +49,6 @@ const EmployeeListPage = () => {
   }, [])
 
   const handleEditClick = employeeId => {
-    // Implement your edit logic here, e.g., navigate to an edit page
     console.log(`Editing employee with ID: ${employeeId}`)
   }
 
@@ -129,15 +128,22 @@ const EmployeeListPage = () => {
                     {employee.mobile}
                   </TableCell>
                   <TableCell
-                    style={{ border: '1px solid #ddd', textAlign: 'center' }}
+                    style={{
+                      border: '1px solid #ddd',
+                      textAlign: 'center',
+                      display: 'flex',
+                      justifyContent: 'space-between'
+                    }}
                   >
                     <Button
                       variant='contained'
                       color='primary'
                       onClick={() => handleEditClick(employee.id)}
-                      style={{ display: 'flex', justifyContent: 'center' }}
                     >
                       Edit
+                    </Button>
+                    <Button variant='contained' color='primary'>
+                      Delete
                     </Button>
                   </TableCell>
                 </TableRow>

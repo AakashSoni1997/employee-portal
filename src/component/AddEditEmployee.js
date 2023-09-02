@@ -10,25 +10,32 @@ import {
   Grid,
   Paper,
   Typography,
-  FormLabel
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core'
+import { postWithBearerToken } from '../utils/method'
+import { POST_ADD_EMPLOYEE } from '../utils/contant'
 
 const AddEditEmployee = ({ initialValues }) => {
   const { control, handleSubmit, errors } = useForm({
     defaultValues: initialValues || {}
   })
-
   const onSubmit = data => {
-    // Handle form submission here with validated data
-    console.log(data)
+    console.log('data', data)
+    postWithBearerToken(POST_ADD_EMPLOYEE, data)
   }
 
   const regions = [
-    { id: 1, name: 'Region 1' },
-    { id: 2, name: 'Region 2' },
-    { id: 3, name: 'Region 3' },
-    { id: 4, name: 'Region 4' },
-    { id: 5, name: 'Region 5' }
+    { id: 2, name: 'Region 2' }
+    // { id: 3, name: 'Region 3' },
+    // { id: 4, name: 'Region 4' },
+    // { id: 5, name: 'Region 5' }
+  ]
+  const masterBranchIds = [
+    { id: 13, name: 'Region 13' }
+    // { id: 3, name: 'Region 3' },
+    // { id: 4, name: 'Region 4' },
+    // { id: 5, name: 'Region 5' }
   ]
 
   return (
@@ -36,7 +43,7 @@ const AddEditEmployee = ({ initialValues }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant='h6'>Employee Details</Typography>
+            <Typography variant='h6'> Add Employee Details</Typography>
           </Grid>
           <Grid item xs={6}>
             <Controller
@@ -57,40 +64,6 @@ const AddEditEmployee = ({ initialValues }) => {
           </Grid>
           <Grid item xs={6}>
             <Controller
-              name='mobile'
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  label='Mobile'
-                  variant='outlined'
-                  fullWidth
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={!!errors?.mobile}
-                  helperText={errors?.mobile && 'Mobile is required'}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Controller
-              name='email'
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  label='Email'
-                  variant='outlined'
-                  fullWidth
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={!!errors?.email}
-                  helperText={errors?.email && 'Email is required'}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Controller
               name='masterDepartmentId'
               control={control}
               render={({ field }) => (
@@ -99,18 +72,18 @@ const AddEditEmployee = ({ initialValues }) => {
                   <Select
                     label='Department'
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={event =>
+                      field.onChange(Number(event.target.value))
+                    }
                   >
                     <MenuItem value={1}>Department 1</MenuItem>
-                    <MenuItem value={2}>Department 2</MenuItem>
                   </Select>
                 </FormControl>
               )}
             />
           </Grid>
           <Grid item xs={6}>
-            <FormControl>
-              <FormLabel>Regions</FormLabel>
+            <FormControl fullWidth>
               <Controller
                 key={regions[0].id}
                 name='masterRegionIds'
@@ -136,6 +109,356 @@ const AddEditEmployee = ({ initialValues }) => {
                 )}
               />
             </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <Controller
+                key={regions[0].id}
+                name='masterBranchIds'
+                control={control}
+                render={({ field }) => (
+                  <FormControl fullWidth variant='outlined'>
+                    <InputLabel>Branch</InputLabel>
+                    <Select
+                      label='Branch'
+                      multiple
+                      value={field.value || []}
+                      onChange={field.onChange}
+                      error={!!errors?.masterRegionIds}
+                      renderValue={selected => selected.join(', ')}
+                    >
+                      {masterBranchIds.map(masterBranchIds => (
+                        <MenuItem
+                          key={masterBranchIds.id}
+                          value={masterBranchIds.id}
+                        >
+                          {masterBranchIds.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <Controller
+                key={regions[0].id}
+                name='masterSalesOfficeIds'
+                control={control}
+                render={({ field }) => (
+                  <FormControl fullWidth variant='outlined'>
+                    <InputLabel>Sales Office</InputLabel>
+                    <Select
+                      label='Sales Office'
+                      multiple
+                      value={field.value || []}
+                      onChange={field.onChange}
+                      error={!!errors?.masterRegionIds}
+                      renderValue={selected => selected.join(', ')}
+                    >
+                      {regions.map(region => (
+                        <MenuItem key={region.id} value={region.id}>
+                          {region.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='masterDesignationId'
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth variant='outlined'>
+                  <InputLabel>Designation</InputLabel>
+                  <Select
+                    label='Designation'
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    <MenuItem value={1}>Designation 1</MenuItem>
+                    <MenuItem value={2}>Designation 2</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='mobile'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='Mobile'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={!!errors?.mobile}
+                  helperText={errors?.mobile && 'Mobile is required'}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='actualDesignation'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='Actual Designation'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={!!errors?.name}
+                  helperText={errors?.name && 'Name is required'}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='userId'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='UserID'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={event => field.onChange(Number(event.target.value))}
+                  error={!!errors?.name}
+                  type='number'
+                  helperText={errors?.name && 'Name is required'}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='email'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='Email'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={!!errors?.email}
+                  helperText={errors?.email && 'Email is required'}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={
+                <Controller
+                  name='isViewCustomers'
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => <Checkbox {...field} />}
+                />
+              }
+              label=' View Customer'
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={
+                <Controller
+                  name='isViewQuotation'
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => <Checkbox {...field} />}
+                />
+              }
+              label=' View Quotation'
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='actualDesignationId'
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth variant='outlined'>
+                  <InputLabel>Actual Designation</InputLabel>
+                  <Select
+                    label='Department'
+                    value={field.value}
+                    onChange={event =>
+                      field.onChange(Number(event.target.value))
+                    }
+                  >
+                    <MenuItem value={1}>Department 1</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='nextUserId'
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth variant='outlined'>
+                  <InputLabel>Next User</InputLabel>
+                  <Select
+                    label='Next User'
+                    value={field.value}
+                    onChange={event =>
+                      field.onChange(Number(event.target.value))
+                    }
+                  >
+                    <MenuItem value={1}>Next User 1</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='copsUserId'
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth variant='outlined'>
+                  <InputLabel> COPS Next User 1</InputLabel>
+                  <Select
+                    label=' COPS Next User 1'
+                    value={field.value}
+                    onChange={event =>
+                      field.onChange(Number(event.target.value))
+                    }
+                  >
+                    <MenuItem value={1}> COPS Next User 1</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={
+                <Controller
+                  name='isCOPSMainUser'
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => <Checkbox {...field} />}
+                />
+              }
+              label='Is COPS Main User'
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControlLabel
+              control={
+                <Controller
+                  name='isCOPSOutOfOffice'
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => <Checkbox {...field} />}
+                />
+              }
+              label='Is COPS Out Of Office'
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='maxLoadPerDay'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='Max Load Per Day'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={event => field.onChange(Number(event.target.value))}
+                  error={!!errors?.name}
+                  type='number'
+                  helperText={errors?.name && 'Name is required'}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='totalCapacity'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='COPS Capacity'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={event => field.onChange(Number(event.target.value))}
+                  error={!!errors?.name}
+                  type='number'
+                  helperText={errors?.name && 'Name is required'}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='maxLoadOwnBranch'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='Max Load Own Branch'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={event => field.onChange(Number(event.target.value))}
+                  error={!!errors?.name}
+                  type='number'
+                  helperText={errors?.name && 'Name is required'}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <Controller
+              name='maxLoadOtherBranch'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='Max Load Other Branch'
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={event => field.onChange(Number(event.target.value))}
+                  error={!!errors?.name}
+                  type='number'
+                  helperText={errors?.name && 'Name is required'}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              name='priorityOtherBranch'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='Priority Other Branch '
+                  variant='outlined'
+                  fullWidth
+                  value={field.value}
+                  onChange={event => field.onChange(Number(event.target.value))}
+                  error={!!errors?.name}
+                  type='number'
+                  helperText={errors?.name && 'Name is required'}
+                />
+              )}
+            />
           </Grid>
         </Grid>
         <Button type='submit' variant='contained' color='primary'>

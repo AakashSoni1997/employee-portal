@@ -8,13 +8,7 @@ import Router from './Routes/Route'
 function App () {
   return (
     <div>
-      {/* <Routes>
-        <Route path='/' element={<Auth />} />
-        <Route path='/EmployeeListPage' element={<EmployeeListPage />} />
-      </Routes> */}
-
       <Router />
-      {/* <PrivateRoute props={props} /> */}
     </div>
   )
 }
