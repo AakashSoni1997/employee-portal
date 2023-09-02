@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Auth from '../component/Auth'
 import EmployeeListPage from '../component/EmployeeListPage'
-import AddEditEmployee from '../component/AddEditEmployee'
+import AddEditEmployee from '../component/AddEditEmployee/AddEditEmployee'
 
 const Router = () => {
   return (

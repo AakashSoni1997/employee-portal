@@ -14,7 +14,7 @@ import {
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 import { authEmployee } from '../utils/method'
-import { POST_AUTH_EMPLOYEE } from '../utils/contant'
+import { POST_AUTH_EMPLOYEE } from '../utils/constant'
 
 const defaultTheme = createTheme()
 
@@ -27,15 +27,16 @@ export default function Auth () {
   } = useForm()
 
   const onSubmit = async data => {
-    authEmployee(POST_AUTH_EMPLOYEE, data)
-      .then(res => {
-        const { accessToken, refreshToken } = res
-        localStorage.setItem('token', accessToken)
-      })
-      .then(navigate('/EmployeeListPage'))
-      .catch(err => {
-        console.log(err, 'error')
-      })
+    try {
+      const res = await authEmployee(POST_AUTH_EMPLOYEE, data)
+      if (res?.accessToken) {
+        navigate('/EmployeeListPage')
+      } else {
+        console.error('Authentication failed')
+      }
+    } catch (err) {
+      console.error(err, 'error')
+    }
   }
   return (
     <ThemeProvider theme={defaultTheme}>

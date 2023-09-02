@@ -15,7 +15,7 @@ import {
   styled
 } from '@material-ui/core'
 import { getWithBearerToken } from '../utils/method'
-import { GET_EMPLOYEE_LIST } from '../utils/contant'
+import { GET_EMPLOYEE_LIST } from '../utils/constant'
 import { useNavigate } from 'react-router'
 
 const StyledButton = styled(Button)({
@@ -32,10 +32,9 @@ const EmployeeListPage = () => {
   const navigate = useNavigate()
   const [data, setData] = useState()
   console.log('data', data)
-  const bearerToken = localStorage.getItem('token') || ''
 
   useEffect(() => {
-    getWithBearerToken(GET_EMPLOYEE_LIST, bearerToken)
+    getWithBearerToken(GET_EMPLOYEE_LIST)
       .then(responseData => {
         if (responseData.length) {
           setData(responseData)
@@ -142,7 +141,7 @@ const EmployeeListPage = () => {
                     >
                       Edit
                     </Button>
-                    <Button variant='contained' color='primary'>
+                    <Button variant='contained' color='primary' onClick>
                       Delete
                     </Button>
                   </TableCell>

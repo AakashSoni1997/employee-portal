@@ -13,30 +13,24 @@ import {
   FormControlLabel,
   Checkbox
 } from '@material-ui/core'
-import { postWithBearerToken } from '../utils/method'
-import { POST_ADD_EMPLOYEE } from '../utils/contant'
+import useAddEditEmployee from './useAddEditEmployee'
 
 const AddEditEmployee = ({ initialValues }) => {
   const { control, handleSubmit, errors } = useForm({
     defaultValues: initialValues || {}
   })
-  const onSubmit = data => {
-    console.log('data', data)
-    postWithBearerToken(POST_ADD_EMPLOYEE, data)
-  }
 
-  const regions = [
-    { id: 2, name: 'Region 2' }
-    // { id: 3, name: 'Region 3' },
-    // { id: 4, name: 'Region 4' },
-    // { id: 5, name: 'Region 5' }
-  ]
-  const masterBranchIds = [
-    { id: 13, name: 'Region 13' }
-    // { id: 3, name: 'Region 3' },
-    // { id: 4, name: 'Region 4' },
-    // { id: 5, name: 'Region 5' }
-  ]
+  const {
+    onSubmit,
+    regionData,
+    branchData,
+    salesData,
+    departmentData,
+    designationData
+  } = useAddEditEmployee()
+
+  const regions = [{ id: 2, name: 'Region 2' }]
+  const masterBranchIds = [{ id: 13, name: 'Region 13' }]
 
   return (
     <Paper elevation={3} style={{ padding: '20px' }}>
@@ -99,7 +93,7 @@ const AddEditEmployee = ({ initialValues }) => {
                       error={!!errors?.masterRegionIds}
                       renderValue={selected => selected.join(', ')}
                     >
-                      {regions.map(region => (
+                      {regionData?.map(region => (
                         <MenuItem key={region.id} value={region.id}>
                           {region.name}
                         </MenuItem>
@@ -127,7 +121,7 @@ const AddEditEmployee = ({ initialValues }) => {
                       error={!!errors?.masterRegionIds}
                       renderValue={selected => selected.join(', ')}
                     >
-                      {masterBranchIds.map(masterBranchIds => (
+                      {branchData?.map(masterBranchIds => (
                         <MenuItem
                           key={masterBranchIds.id}
                           value={masterBranchIds.id}
@@ -158,9 +152,9 @@ const AddEditEmployee = ({ initialValues }) => {
                       error={!!errors?.masterRegionIds}
                       renderValue={selected => selected.join(', ')}
                     >
-                      {regions.map(region => (
-                        <MenuItem key={region.id} value={region.id}>
-                          {region.name}
+                      {salesData?.map(sales => (
+                        <MenuItem key={sales.id} value={sales.id}>
+                          {sales.name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -181,8 +175,11 @@ const AddEditEmployee = ({ initialValues }) => {
                     value={field.value}
                     onChange={field.onChange}
                   >
-                    <MenuItem value={1}>Designation 1</MenuItem>
-                    <MenuItem value={2}>Designation 2</MenuItem>
+                    {designationData?.map(designation => (
+                      <MenuItem value={designation.id}>
+                        {designation.code}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               )}
@@ -297,7 +294,11 @@ const AddEditEmployee = ({ initialValues }) => {
                       field.onChange(Number(event.target.value))
                     }
                   >
-                    <MenuItem value={1}>Department 1</MenuItem>
+                    {departmentData?.map(department => (
+                      <MenuItem value={department.id}>
+                        {department.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               )}
