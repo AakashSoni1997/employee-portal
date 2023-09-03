@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   BRANCH_API,
   DEPARTMENT_API,
@@ -7,9 +7,15 @@ import {
   REGION_API,
   SALES_OFFICE_API
 } from '../../utils/constant'
-import { getWithBearerToken, postWithBearerToken } from '../../utils/method'
+import {
+  getEmployeeDetailsWithBearerToken,
+  getWithBearerToken,
+  postWithBearerToken
+} from '../../utils/method'
+import { useLocation } from 'react-router-dom'
 
-const useAddEditEmployee = () => {
+const useAddEditEmployee = ({ id }) => {
+  const [initialValues, setInitialValues] = useState({})
   const [regionData, setRegionData] = useState([])
   const [branchData, setBranchData] = useState([])
   const [salesData, setSalesData] = useState([])
@@ -18,6 +24,15 @@ const useAddEditEmployee = () => {
   const onSubmit = data => {
     postWithBearerToken(POST_ADD_EMPLOYEE, data)
   }
+  const location = useLocation()
+  const isEdit = location.pathname.includes('update')
+  useEffect(() => {
+    if (isEdit) {
+      getEmployeeDetailsWithBearerToken(id).then(
+        res => res && setInitialValues(res)
+      )
+    }
+  }, [id, isEdit])
 
   useEffect(() => {
     getWithBearerToken(REGION_API).then(res => {
@@ -43,7 +58,8 @@ const useAddEditEmployee = () => {
     branchData,
     salesData,
     departmentData,
-    designationData
+    designationData,
+    initialValues
   }
 }
 

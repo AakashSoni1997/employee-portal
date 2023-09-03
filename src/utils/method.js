@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { GET_EMPLOYEE_DETAILS } from './constant'
+import { DELETE_EMPLOYEE, GET_EMPLOYEE_DETAILS } from './constant'
 
 const getToken = () => {
   const token = localStorage.getItem('token')
@@ -12,7 +12,6 @@ const getToken = () => {
 
 const handleResponse = response => {
   if (response.status === 200) {
-    // toast.success(response.data.message)
     return response.data.data
   }
   throw new Error(`Request failed with status ${response.status}`)
@@ -24,7 +23,7 @@ const handleError = error => {
 }
 
 const axiosInstance = axios.create({
-  baseURL: 'http://drivequote-dev.webmyneproduct.com/api/' // Set the common base URL here
+  baseURL: 'http://drivequote-dev.webmyneproduct.com/api/'
 })
 
 axiosInstance.interceptors.request.use(config => {
@@ -45,7 +44,7 @@ export const getWithBearerToken = async (url, params = {}) => {
 
 export const authEmployee = async (url, body) => {
   try {
-    const response = await axiosInstance.post(url, body)
+    const response = await axios.post(url, body)
     const data = handleResponse(response)
 
     if (data?.accessToken) {
@@ -67,9 +66,10 @@ export const postWithBearerToken = async (url, body) => {
   }
 }
 
-export const deleteWithBearerToken = async (url, body) => {
+export const deleteWithBearerToken = async id => {
+  const url = `${DELETE_EMPLOYEE}/${id}`
   try {
-    const response = await axiosInstance.delete(url, body)
+    const response = await axiosInstance.delete(url)
     return handleResponse(response)
   } catch (error) {
     return handleError(error)
@@ -77,7 +77,7 @@ export const deleteWithBearerToken = async (url, body) => {
 }
 
 export const getEmployeeDetailsWithBearerToken = async id => {
-  const url = `${GET_EMPLOYEE_DETAILS}${id}`
+  const url = `${GET_EMPLOYEE_DETAILS}/${id}`
   try {
     const response = await axiosInstance.get(url)
     return handleResponse(response)

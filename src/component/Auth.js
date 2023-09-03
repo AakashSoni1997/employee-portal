@@ -8,10 +8,11 @@ import {
   createTheme,
   ThemeProvider,
   Typography,
-  Paper
+  Paper,
+  Avatar
 } from '@material-ui/core'
+import { LockOutlined } from '@material-ui/icons'
 
-import axios from 'axios'
 import { useNavigate } from 'react-router'
 import { authEmployee } from '../utils/method'
 import { POST_AUTH_EMPLOYEE } from '../utils/constant'
@@ -24,13 +25,18 @@ export default function Auth () {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm()
+  } = useForm({
+    defaultValues: {
+      userName: '',
+      password: ''
+    }
+  })
 
   const onSubmit = async data => {
     try {
       const res = await authEmployee(POST_AUTH_EMPLOYEE, data)
       if (res?.accessToken) {
-        navigate('/EmployeeListPage')
+        navigate('/employee-list')
       } else {
         console.error('Authentication failed')
       }
@@ -38,10 +44,12 @@ export default function Auth () {
       console.error(err, 'error')
     }
   }
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container
         component='main'
+        maxWidth='xs'
         style={{
           height: '100vh',
           display: 'flex',
@@ -59,8 +67,13 @@ export default function Auth () {
             alignItems: 'center'
           }}
         >
-          <Typography component='h1' variant='h5'>
-            Sign In Page
+          <Avatar
+            style={{ backgroundColor: defaultTheme.palette.primary.main }}
+          >
+            <LockOutlined />
+          </Avatar>
+          <Typography component='h1' variant='h5' style={{ marginTop: '10px' }}>
+            Sign In
           </Typography>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -69,6 +82,7 @@ export default function Auth () {
             <Controller
               name='userName'
               control={control}
+              defaultValue=''
               rules={{
                 required: 'Username is required',
                 minLength: {
@@ -79,20 +93,22 @@ export default function Auth () {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  variant='outlined'
                   margin='normal'
                   required
                   fullWidth
                   id='name'
-                  label='UserName'
+                  label='Username'
                   autoFocus
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
+                  error={!!errors.userName}
+                  helperText={errors.userName?.message}
                 />
               )}
             />
             <Controller
               name='password'
               control={control}
+              defaultValue=''
               rules={{
                 required: 'Password is required',
                 minLength: {
@@ -103,6 +119,7 @@ export default function Auth () {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  variant='outlined'
                   margin='normal'
                   required
                   fullWidth

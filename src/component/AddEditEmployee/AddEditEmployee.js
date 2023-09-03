@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import {
   Button,
@@ -14,41 +14,49 @@ import {
   Checkbox
 } from '@material-ui/core'
 import useAddEditEmployee from './useAddEditEmployee'
+import { useParams } from 'react-router'
 
-const AddEditEmployee = ({ initialValues }) => {
-  const { control, handleSubmit, errors } = useForm({
-    defaultValues: initialValues || {}
-  })
-
+const AddEditEmployee = () => {
+  const { id } = useParams()
   const {
     onSubmit,
     regionData,
     branchData,
     salesData,
     departmentData,
-    designationData
-  } = useAddEditEmployee()
+    designationData,
+    initialValues
+  } = useAddEditEmployee({ id })
 
-  const regions = [{ id: 2, name: 'Region 2' }]
-  const masterBranchIds = [{ id: 13, name: 'Region 13' }]
+  const { control, handleSubmit, errors } = useForm({
+    defaultValues: initialValues || {}
+  })
+
+  const [formData, setFormData] = useState(initialValues || {})
+  console.log('formData', formData)
+
+  useEffect(() => {
+    setFormData(initialValues || {})
+  }, [initialValues])
 
   return (
     <Paper elevation={3} style={{ padding: '20px' }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant='h6'> Add Employee Details</Typography>
+            <Typography variant='h6'>Employee Details</Typography>
           </Grid>
           <Grid item xs={6}>
             <Controller
               name='name'
+              value
               control={control}
               render={({ field }) => (
                 <TextField
                   label='Name'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.name}
                   onChange={field.onChange}
                   error={!!errors?.name}
                   helperText={errors?.name && 'Name is required'}
@@ -58,28 +66,34 @@ const AddEditEmployee = ({ initialValues }) => {
           </Grid>
           <Grid item xs={6}>
             <Controller
-              name='masterDepartmentId'
+              name='masterDepartmentId' // The field name in your form data
               control={control}
               render={({ field }) => (
                 <FormControl fullWidth variant='outlined'>
                   <InputLabel>Department</InputLabel>
                   <Select
                     label='Department'
-                    value={field.value}
+                    fullWidth
+                    value={Number(field.value || formData.masterDepartmentId)} // Parse it as a number
                     onChange={event =>
                       field.onChange(Number(event.target.value))
                     }
+                    error={!!errors?.masterDepartmentId}
                   >
-                    <MenuItem value={1}>Department 1</MenuItem>
+                    {departmentData?.map(department => (
+                      <MenuItem key={department.id} value={department.id}>
+                        {department.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               )}
             />
           </Grid>
+
           <Grid item xs={6}>
             <FormControl fullWidth>
               <Controller
-                key={regions[0].id}
                 name='masterRegionIds'
                 control={control}
                 render={({ field }) => (
@@ -104,10 +118,10 @@ const AddEditEmployee = ({ initialValues }) => {
               />
             </FormControl>
           </Grid>
+
           <Grid item xs={6}>
             <FormControl fullWidth>
               <Controller
-                key={regions[0].id}
                 name='masterBranchIds'
                 control={control}
                 render={({ field }) => (
@@ -138,7 +152,6 @@ const AddEditEmployee = ({ initialValues }) => {
           <Grid item xs={6}>
             <FormControl fullWidth>
               <Controller
-                key={regions[0].id}
                 name='masterSalesOfficeIds'
                 control={control}
                 render={({ field }) => (
@@ -172,7 +185,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   <InputLabel>Designation</InputLabel>
                   <Select
                     label='Designation'
-                    value={field.value}
+                    value={field.value || formData.masterDesignationId}
                     onChange={field.onChange}
                   >
                     {designationData?.map(designation => (
@@ -194,7 +207,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='Mobile'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.mobile}
                   onChange={field.onChange}
                   error={!!errors?.mobile}
                   helperText={errors?.mobile && 'Mobile is required'}
@@ -211,7 +224,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='Actual Designation'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.actualDesignation}
                   onChange={field.onChange}
                   error={!!errors?.name}
                   helperText={errors?.name && 'Name is required'}
@@ -228,7 +241,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='UserID'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.userId}
                   onChange={event => field.onChange(Number(event.target.value))}
                   error={!!errors?.name}
                   type='number'
@@ -246,7 +259,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='Email'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.email}
                   onChange={field.onChange}
                   error={!!errors?.email}
                   helperText={errors?.email && 'Email is required'}
@@ -289,7 +302,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   <InputLabel>Actual Designation</InputLabel>
                   <Select
                     label='Department'
-                    value={field.value}
+                    value={field.value || formData.actualDesignationId}
                     onChange={event =>
                       field.onChange(Number(event.target.value))
                     }
@@ -313,7 +326,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   <InputLabel>Next User</InputLabel>
                   <Select
                     label='Next User'
-                    value={field.value}
+                    value={field.value || formData.nextUserId}
                     onChange={event =>
                       field.onChange(Number(event.target.value))
                     }
@@ -333,7 +346,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   <InputLabel> COPS Next User 1</InputLabel>
                   <Select
                     label=' COPS Next User 1'
-                    value={field.value}
+                    value={field.value || formData.copsUserId}
                     onChange={event =>
                       field.onChange(Number(event.target.value))
                     }
@@ -379,7 +392,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='Max Load Per Day'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.maxLoadPerDay}
                   onChange={event => field.onChange(Number(event.target.value))}
                   error={!!errors?.name}
                   type='number'
@@ -397,7 +410,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='COPS Capacity'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.totalCapacity}
                   onChange={event => field.onChange(Number(event.target.value))}
                   error={!!errors?.name}
                   type='number'
@@ -415,7 +428,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='Max Load Own Branch'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.maxLoadOwnBranch}
                   onChange={event => field.onChange(Number(event.target.value))}
                   error={!!errors?.name}
                   type='number'
@@ -434,7 +447,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='Max Load Other Branch'
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.maxLoadOtherBranch}
                   onChange={event => field.onChange(Number(event.target.value))}
                   error={!!errors?.name}
                   type='number'
@@ -452,7 +465,7 @@ const AddEditEmployee = ({ initialValues }) => {
                   label='Priority Other Branch '
                   variant='outlined'
                   fullWidth
-                  value={field.value}
+                  value={field.value || formData.priorityOtherBranch}
                   onChange={event => field.onChange(Number(event.target.value))}
                   error={!!errors?.name}
                   type='number'
@@ -462,7 +475,13 @@ const AddEditEmployee = ({ initialValues }) => {
             />
           </Grid>
         </Grid>
-        <Button type='submit' variant='contained' color='primary'>
+        <Button
+          type='submit'
+          variant='contained'
+          color='primary'
+          size='large' // Increase the button size
+          style={{ marginTop: '20px', width: '100%' }}
+        >
           Submit
         </Button>
       </form>

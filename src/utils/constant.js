@@ -16,3 +16,5 @@ export const DEPARTMENT_API =
   'http://drivequote-dev.webmyneproduct.com/api/MasterDepartment/getalls'
 export const DESIGNATION_API =
   'http://drivequote-dev.webmyneproduct.com/api/MasterDesignation/getalls'
+export const DELETE_EMPLOYEE =
+  'http://drivequote-dev.webmyneproduct.com/api/MasterEmployee'

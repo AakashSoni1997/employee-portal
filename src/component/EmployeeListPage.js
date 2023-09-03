@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Container,
-  Grid,
   LinearProgress,
   Paper,
   Table,
@@ -14,7 +13,7 @@ import {
   TableRow,
   styled
 } from '@material-ui/core'
-import { getWithBearerToken } from '../utils/method'
+import { deleteWithBearerToken, getWithBearerToken } from '../utils/method'
 import { GET_EMPLOYEE_LIST } from '../utils/constant'
 import { useNavigate } from 'react-router'
 
@@ -31,8 +30,7 @@ const StyledButton = styled(Button)({
 const EmployeeListPage = () => {
   const navigate = useNavigate()
   const [data, setData] = useState()
-  console.log('data', data)
-
+  const [toggle, setToggle] = useState(false)
   useEffect(() => {
     getWithBearerToken(GET_EMPLOYEE_LIST)
       .then(responseData => {
@@ -45,10 +43,14 @@ const EmployeeListPage = () => {
       .catch(error => {
         console.error('An error occurred:', error)
       })
-  }, [])
+  }, [toggle])
 
   const handleEditClick = employeeId => {
-    console.log(`Editing employee with ID: ${employeeId}`)
+    navigate(`/update-employee/${employeeId}`)
+  }
+  const handleDelete = id => {
+    deleteWithBearerToken(id)
+    setToggle(!toggle)
   }
 
   return (
@@ -134,6 +136,9 @@ const EmployeeListPage = () => {
                       justifyContent: 'space-between'
                     }}
                   >
+                    <Button variant='contained' color='primary'>
+                      View
+                    </Button>
                     <Button
                       variant='contained'
                       color='primary'
@@ -141,7 +146,11 @@ const EmployeeListPage = () => {
                     >
                       Edit
                     </Button>
-                    <Button variant='contained' color='primary' onClick>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={() => handleDelete(employee.id)}
+                    >
                       Delete
                     </Button>
                   </TableCell>
