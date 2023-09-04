@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
   Button,
   TextField,
@@ -28,10 +30,23 @@ const AddEditEmployee = () => {
     initialValues
   } = useAddEditEmployee({ id })
 
-  const { control, handleSubmit, errors } = useForm({
-    defaultValues: initialValues || {}
+  const validationSchema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    mobile: yup.string().required('Mobile is required'),
+    email: yup
+      .string()
+      .email('Invalid email format')
+      .required('Email is required')
   })
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues: initialValues || {},
+    resolver: yupResolver(validationSchema)
+  })
   const [formData, setFormData] = useState(initialValues || {})
   console.log('formData', formData)
 
@@ -66,7 +81,7 @@ const AddEditEmployee = () => {
           </Grid>
           <Grid item xs={6}>
             <Controller
-              name='masterDepartmentId' // The field name in your form data
+              name='masterDepartmentId'
               control={control}
               render={({ field }) => (
                 <FormControl fullWidth variant='outlined'>
@@ -74,7 +89,7 @@ const AddEditEmployee = () => {
                   <Select
                     label='Department'
                     fullWidth
-                    value={Number(field.value || formData.masterDepartmentId)} // Parse it as a number
+                    value={Number(field.value || formData.masterDepartmentId)}
                     onChange={event =>
                       field.onChange(Number(event.target.value))
                     }
@@ -207,10 +222,10 @@ const AddEditEmployee = () => {
                   label='Mobile'
                   variant='outlined'
                   fullWidth
-                  value={field.value || formData.mobile}
+                  value={field.value || ''}
                   onChange={field.onChange}
-                  error={!!errors?.mobile}
-                  helperText={errors?.mobile && 'Mobile is required'}
+                  error={!!errors.mobile}
+                  helperText={errors.mobile && errors.mobile.message}
                 />
               )}
             />
@@ -259,10 +274,10 @@ const AddEditEmployee = () => {
                   label='Email'
                   variant='outlined'
                   fullWidth
-                  value={field.value || formData.email}
+                  value={field.value || ''}
                   onChange={field.onChange}
-                  error={!!errors?.email}
-                  helperText={errors?.email && 'Email is required'}
+                  error={!!errors.email}
+                  helperText={errors.email && errors.email.message}
                 />
               )}
             />
